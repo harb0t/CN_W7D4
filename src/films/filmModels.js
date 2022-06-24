@@ -1,18 +1,24 @@
 const mongoose = require("mongoose");
 
 const filmSchema = new mongoose.Schema({
-    // rules
     title: {
         type: String,
-        //Can't have duplicates
         unique: true,
         required: true,
     },
-    actor: {
+    actor:{
         type: String,
-
+        required: false,
+        default: "No info",
     },
+    director: {
+        type: String,
+        required: false,
+        default: "No info",
+    },
+
     
+
 });
 
 const Film = mongoose.model("Film", filmSchema);

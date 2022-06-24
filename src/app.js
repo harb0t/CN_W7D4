@@ -1,25 +1,46 @@
-require("./db/connection")
+require ("./db/connection");
+
+//importing mongoose
 const mongoose = require("mongoose");
+
+//importing yargs
 const yargs = require("yargs");
-///curly bracks for multiple functions
-const {addFilm, listFilms} = require ("./films/filmMethods");
+
+//importing methods
+const { addFilm, listFilms, deleteOne, updateFilm } = require("./films/filmMethods");
+
+//importing schema (keys and values)
+const Film = require ("./films/filmModels");
+
 
 const app = async (yargsObj) => {
-    try {
+    try{
         if (yargsObj.add) {
-            await addFilm({ title: yargsObj.title, actor: yargsObj.actor})
+            await addFilm({title: yargsObj.title, actor: yargsObj.actor, director: yargsObj.director})
             console.log(await listFilms());
-        } else if (yargsObj.list){
+
+        } else if (yargsObj.list) {
             console.log(await listFilms());
+
+        } else if (yargsObj.delete){ 
+        let titleToDelete = {
+            title: yargsObj.delete
+        }
+            await deleteOne(Film, titleToDelete);
+            console.log("film deleted");
+
+        } else if (yargsObj.update){
+            await updateFilm({title:yargsObj.update}, {title: yargsObj.title, actor: yargsObj.actor, director: yargsObj.director});
+            console.log(await listFilms());
+
         } else {
             console.log("Incorrect command");
-        }
-        await mongoose.disconnect()
+        } 
+        await mongoose.disconnect();
     } catch (error) {
         console.log(error);
     }
 };
 
-app(yargs.argv);
 
-// await
+app(yargs.argv);
